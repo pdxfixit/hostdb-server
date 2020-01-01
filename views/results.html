@@ -1,0 +1,62 @@
+{{ template "0-head.html" }}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" crossorigin="anonymous">
+{{ template "1-header.html" }}
+{{ template "form.html" }}
+<div class="container fixed-fluid">
+
+  <div class="row pb4-sm pt10-sm">
+    <div class="col-sm-4">
+      <h2 class="display-3 pb2-sm">{{ .Count }} records found</h2>
+    </div>
+    <div class="col-sm-1 col-sm-offset-6 ta-sm-c">
+      <h2 class="display-3">
+        <a href="/v0/csv/?{{- .Query | renderQuery -}}" title="Download a CSV of these results">CSV</a>
+      </h2>
+    </div>
+    <div class="col-sm-1 ta-sm-c">
+      <h2 class="display-3">
+        <a href="/v0/detail/?{{- .Query | renderQuery -}}" target="_blank" title="Get these results in JSON format">JSON</a>
+      </h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <table class="table table-hover" id="hostdb-result-table" style="width: 100%;">
+        <thead>
+        <tr>
+          <th></th>
+          {{- range $h := .Header }}
+          {{- if ne $h "data" }}
+          <th>{{ $h }}</th>
+          {{- end }}
+          {{- end }}
+        </tr>
+        </thead>
+        <tbody>
+        {{- range $id, $line := .Lines }}
+          <tr id="{{- index $line "ID" -}}" data-json="{{ index $line "data" }}">
+            <td class="details-control g-chevron-right ta-sm-c d-sm-tc"></td>
+            {{- range $h := $.Header }}
+            {{- if ne $h "data" }}
+            <td>{{ index $line $h }}</td>
+            {{- end }}
+            {{- end }}
+          </tr>
+        {{- end }}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+    {{ if gt (.Count) (.Limit) }}
+        {{ . | renderPagination }}
+    {{ end }}
+
+</div>
+
+{{ template "8-footer.html" }}
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.10.20/dataRender/ellipsis.js" crossorigin="anonymous"></script>
+<script src="datatable.js?{{- gitCommit -}}"></script>
+{{ template "9-bottom.html" }}

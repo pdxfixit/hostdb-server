@@ -1,0 +1,16 @@
+{{ template "0-head.html" }}
+{{ template "1-header.html" }}
+
+<div class="container fixed-fluid">
+  <div class="row">
+    <div class="col-sm-10 col-sm-offset-1" style="margin-top: 10%;">
+      <p>There was an error processing your request. Please try again; but if the problem persists, please open a
+        <a href="https://issues.pdxfixit.com/secure/CreateIssueDetails!init.jspa?pid=12345&issuetype=1&components=12345&summary=HostDB+error+report&description={{- . -}}%0A----%0APlease+include+any+additional+details+about+what+happened:%0A" target="_blank">JIRA ticket</a>.
+      </p>
+      <pre class="pt10-sm">{{- . -}}</pre>
+    </div>
+  </div>
+</div>
+
+{{ template "8-footer.html" }}
+{{ template "9-bottom.html" }}

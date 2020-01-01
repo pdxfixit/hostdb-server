@@ -1,0 +1,54 @@
+body {
+    padding-bottom: 65px;
+    padding-top: 65px;
+    margin: 0px;
+}
+
+button {
+    outline: none;
+}
+
+form button.btn-primary-dark {
+    background-color: #8D8D8D;
+}
+
+section.summary {
+    display: inline-block;
+}
+
+.dropdown-menu {
+    height: auto;
+    max-height: 420px;
+    overflow-x: hidden;
+    z-index: 32767;
+}
+
+.page-link {
+    color: #111;
+}
+
+.page-link:hover {
+    background-color: #E5E5E5;
+    color: #111;
+}
+
+.page-item.active .page-link {
+    background-color: #111;
+    border-color: #111;
+}
+
+.toggle i:before {
+    content: "\E609"; /* chevron-right */
+}
+
+button[aria-expanded=true] i:before {
+    content: "\E607"; /* chevron-down */
+}
+
+tr:hover button.toggle {
+    background-color: rgba(0,0,0,0);
+}
+
+.jsonview {
+    font-size: 13px;
+}

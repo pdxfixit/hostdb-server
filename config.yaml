@@ -1,0 +1,235 @@
+---
+  hostdb:
+    host: 0.0.0.0 # internal ip on which to listen for http connections
+    port: 8080 # used for listening
+    pass: badpassword
+    url: https://hostdb.pdxfixit.com
+    debug: false
+    newrelic_appname: HostDB
+    newrelic_license: abc123
+  mariadb:
+    host: localhost # hostname for the mariadb instance
+    port: 3306 # port for the mariadb instance
+    db: hostdb # database name
+    user: app # user with permissions to write to the database
+    pass: badpassword
+    params: # k=v
+      - "maxAllowedPacket=33554432"
+  api:
+    version: 0
+    v0:
+      context_fields: # this map should be map[type]field, and describes any required context fields for a given type
+        aws:
+          - aws-account-id
+          - aws-region
+        oneview:
+          - oneview_url
+        openstack:
+          - datacenter
+          - os_auth_url
+          - stack_name
+          - tenant_name
+          - tenant_id
+        ucs:
+          - ucs_url
+        vrops-vmware:
+          - vc_name
+          - vc_url
+      default_limit: 30 # the default number of records to return on each page of results in the ui
+      list_fields: # only these fields should be returned by default from lists, and must match the hostdb.Record struct fields (not json)
+        - type
+        - hostname
+        - ip
+      # this map should be map[queryparam][type][location]datapoint
+      # each param should have a type, followed by where the data can be found (table, context or data), and finally, the path to the value
+      query_params:
+        app:
+          openstack:
+            _name: "Application List"
+            data: ".metadata.\"app.list\""
+        account-id:
+          aws:
+            _name: "AWS Account ID"
+            context: ".aws-account-id"
+        account_id:
+          aws:
+            _name: "AWS Account ID"
+            context: ".aws-account-id"
+        aws-account-alias:
+          aws:
+            _name: "AWS Account Alias"
+            context: ".aws-account-alias"
+        aws_account_alias:
+          aws:
+            _name: "AWS Account Alias"
+            context: ".aws-account-alias"
+        aws-account-id:
+          aws:
+            _name: "AWS Account ID"
+            context: ".aws-account-id"
+        aws_account_id:
+          aws:
+            _name: "AWS Account ID"
+            context: ".aws-account-id"
+        aws-account-name:
+          aws:
+            _name: "AWS Account Name"
+            context: ".aws-account-name"
+        aws_account_name:
+          aws:
+            _name: "AWS Account Name"
+            context: ".aws-account-name"
+        aws-region:
+          aws:
+            _name: "AWS Region"
+            context: ".aws-region"
+        aws_region:
+          aws:
+            _name: "AWS Region"
+            context: ".aws-region"
+        datacenter:
+          openstack:
+            _name: "Datacenter"
+            context: ".datacenter"
+        description:
+          openstack:
+            _name: "Description"
+            data: ".metadata.\"description\""
+        env:
+          openstack:
+            _name: "Environment"
+            data: ".metadata.\"env\""
+        flavor:
+          openstack:
+            _name: "Openstack Flavor"
+            context: ".flavor"
+        flavor_id:
+          openstack:
+            _name: "Openstack Flavor ID"
+            data: ".flavor.id"
+        hostname:
+          openstack:
+            _name: "Hostname"
+            table: "hostname"
+        id:
+          aws-bucket:
+            data: ".Name"
+          aws-database:
+            data: ".DbiResourceId"
+          aws-directconnect:
+            data: ".VirtualInterfaceId"
+          aws-hostedzone:
+            data: ".Id"
+          aws-image:
+            data: ".ImageId"
+          aws-keypair:
+            data: ".KeyName"
+          aws-securitygroup:
+            data: ".GroupId"
+          aws-subnet:
+            data: ".SubnetId"
+          aws-vpc:
+            data: ".VpcId"
+          openstack:
+            data: ".id"
+          vrops-vmware:
+            data: ".resourceId"
+        image:
+          openstack:
+            _name: "Openstack Image"
+            context: ".image"
+        ip:
+          openstack:
+            _name: "IP Address"
+            table: "ip"
+        oneview_url:
+          oneview:
+            _name: "OneView URL"
+            context: ".oneview_url"
+        owner:
+          openstack:
+            _name: "Owner List"
+            data: ".metadata.\"owner.list\""
+        puppet:
+          openstack:
+            _name: "Puppet Class List"
+            data: ".metadata.\"puppet.class.list\""
+        region:
+          aws:
+            _name: "AWS Region"
+            context: ".aws-region"
+        serial:
+          ucs-disk:
+            _name: "Serial Number"
+            data: ".serial"
+          ucs-fabric_interconnect:
+            _name: "Serial Number"
+            data: ".serial"
+          ucs-memory:
+            _name: "Serial Number"
+            data: ".serial"
+          ucs-pci:
+            _name: "Serial Number"
+            data: ".serial"
+          ucs-psu:
+            _name: "Serial Number"
+            data: ".serial"
+          ucs-storage:
+            _name: "Serial Number"
+            data: ".serial"
+          ucs-vhba:
+            _name: "Serial Number"
+            data: ".serial"
+          ucs-vic:
+            _name: "Serial Number"
+            data: ".serial"
+        stack:
+          openstack:
+            _name: "Openstack Instance"
+            context: ".stack_name"
+        stack_name:
+          openstack:
+            _name: "Openstack Instance"
+            context: ".stack_name"
+        status:
+          openstack:
+            _name: "Status"
+            data: ".status"
+        tenant:
+          openstack:
+            _name: "Openstack Tenant Name"
+            context: ".tenant_name"
+        tenant_id:
+          openstack:
+            _name: "Openstack Tenant ID"
+            context: ".tenant_id"
+        tenant_name:
+          openstack:
+            _name: "Openstack Tenant Name"
+            context: ".tenant_name"
+        test:
+          test:
+            _name: "Test"
+            data: ".test"
+        type:
+          aws:
+            _name: "Type"
+            table: "type"
+          openstack:
+            _name: "Type"
+            table: "type"
+          vrops-vmware:
+            _name: "Type"
+            table: "type"
+        ucs_url:
+          ucs:
+            _name: "UCS URL"
+            context: ".ucs_url"
+        vc_name:
+          vrops-vmware:
+            _name: "vCenter Name"
+            context: ".vc_name"
+        vc_url:
+          vrops-vmware:
+            _name: "vCenter URL"
+            context: ".vc_url"

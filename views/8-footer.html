@@ -1,0 +1,28 @@
+<footer class="navbar navbar-dark fixed-bottom bg-black justify-content-between ta-sm-c">
+  <div class="col-sm-1">
+    <a href="https://github.com/pdxfixit/hostdb-server/blob/master/openapi.yaml" class="btn-primary-dark" style="color: white;">
+      <h3>API Docs</h3>
+    </a>
+  </div>
+  <div class="col-sm-1">
+    <a href="https://github.com/pdxfixit/hostdb-server/blob/master/EXAMPLES.md" class="btn-primary-dark" style="color: white;">
+      <h3>Examples</h3>
+    </a>
+  </div>
+  <div class="col-sm-1">
+    <a href="https://app.slack.com/client/ABC123/DEF456" class="btn-primary-dark" style="color: white;">
+      <h3>Slack</h3>
+    </a>
+  </div>
+  <div class="col-sm-3 col-sm-offset-4">
+    <a href="https://github.com/pdxfixit/hostdb-server/commit/{{- gitCommit -}}" class="btn-primary-dark" style="color: white;" title="{{- releaseTimestamp -}}">
+      <h3>{{- gitCommit -}} @ {{- hostName -}}</h3>
+    </a>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="jsonTree.js"></script>
+<script src="hostdb.js?{{- gitCommit -}}"></script>

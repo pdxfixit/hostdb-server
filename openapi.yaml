@@ -1,0 +1,1034 @@
+openapi: 3.0.2
+info:
+  contact:
+    email: info@pdxfixit.com
+    name: Ben Sandberg
+    url: https://github.com/pdxfixit/hostdb-server
+  description: Metadata storage service
+  title: HostDB
+  version: 0.3.2
+externalDocs:
+  description: README on GitHub
+  url: https://github.com/pdxfixit/hostdb-server/blob/master/README.md
+servers:
+  - description: Primary production instance of HostDB
+    url: '{protocol}://hostdb.pdxfixit.com'
+    variables:
+      protocol:
+        default: https
+        enum:
+          - http
+          - https
+paths:
+  /admin/showConfig:
+    get:
+      operationId: getConfig
+      responses:
+        '200':
+          $ref: '#/components/responses/config'
+      security:
+        - BasicAuth: []
+      summary: Show the current app configuration.
+      tags:
+        - admin
+  /health:
+    get:
+      operationId: getHealth
+      responses:
+        '200':
+          $ref: '#/components/responses/health'
+      summary: Provide a status of the app and database.
+      tags:
+        - admin
+  /stats:
+    get:
+      operationId: getStats
+      responses:
+        '200':
+          $ref: '#/components/responses/stats'
+        '500':
+          $ref: '#/components/responses/error'
+      summary: Get statistics about HostDB data.
+      tags:
+        - admin
+  /version:
+    get:
+      operationId: getVersion
+      responses:
+        '200':
+          $ref: '#/components/responses/version'
+        '500':
+          $ref: '#/components/responses/error'
+      summary: Get the current version information.
+      tags:
+        - admin
+  /v0/catalog/{item}:
+    get:
+      operationId: getCatalog
+      parameters:
+        - $ref: '#/components/parameters/catalogItem'
+        - $ref: '#/components/parameters/catalogCount'
+        - $ref: '#/components/parameters/catalogFilter'
+      responses:
+        '200':
+          $ref: '#/components/responses/getCatalog'
+        '500':
+          $ref: '#/components/responses/error'
+      summary: Show a catalog with all the known variants of a provided item.
+      tags:
+        - catalog
+  /v0/config:
+    get:
+      operationId: getApiConfig
+      responses:
+        '200':
+          $ref: '#/components/responses/apiConfig'
+        '500':
+          $ref: '#/components/responses/error'
+      summary: API configuration
+      tags:
+        - config
+  /v0/csv:
+    get:
+      operationId: getCsv
+      parameters:
+        - $ref: '#/components/parameters/_limit'
+        - $ref: '#/components/parameters/_offset'
+        - $ref: '#/components/parameters/_search'
+        - $ref: '#/components/parameters/app'
+        - $ref: '#/components/parameters/aws-account-alias'
+        - $ref: '#/components/parameters/aws-account-id'
+        - $ref: '#/components/parameters/aws-account-name'
+        - $ref: '#/components/parameters/aws-region'
+        - $ref: '#/components/parameters/datacenter'
+        - $ref: '#/components/parameters/description'
+        - $ref: '#/components/parameters/env'
+        - $ref: '#/components/parameters/flavor'
+        - $ref: '#/components/parameters/flavor_id'
+        - $ref: '#/components/parameters/hostname'
+        - $ref: '#/components/parameters/id-query'
+        - $ref: '#/components/parameters/image'
+        - $ref: '#/components/parameters/ip'
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/puppet'
+        - $ref: '#/components/parameters/sin'
+        - $ref: '#/components/parameters/stack'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/tenant'
+        - $ref: '#/components/parameters/tenant_id'
+        - $ref: '#/components/parameters/type'
+      responses:
+        '200':
+          $ref: '#/components/responses/getCsv'
+        '500':
+          $ref: '#/components/responses/error'
+      summary: Output results as CSV
+      tags:
+        - csv
+  /v0/detail:
+    get:
+      operationId: getDetail
+      parameters:
+        - $ref: '#/components/parameters/_limit'
+        - $ref: '#/components/parameters/_offset'
+        - $ref: '#/components/parameters/_search'
+        - $ref: '#/components/parameters/app'
+        - $ref: '#/components/parameters/aws-account-alias'
+        - $ref: '#/components/parameters/aws-account-id'
+        - $ref: '#/components/parameters/aws-account-name'
+        - $ref: '#/components/parameters/aws-region'
+        - $ref: '#/components/parameters/datacenter'
+        - $ref: '#/components/parameters/description'
+        - $ref: '#/components/parameters/env'
+        - $ref: '#/components/parameters/flavor'
+        - $ref: '#/components/parameters/flavor_id'
+        - $ref: '#/components/parameters/hostname'
+        - $ref: '#/components/parameters/id-query'
+        - $ref: '#/components/parameters/image'
+        - $ref: '#/components/parameters/ip'
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/puppet'
+        - $ref: '#/components/parameters/sin'
+        - $ref: '#/components/parameters/stack'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/tenant'
+        - $ref: '#/components/parameters/tenant_id'
+        - $ref: '#/components/parameters/type'
+      responses:
+        '200':
+          $ref: '#/components/responses/getRecords'
+        '400':
+          $ref: '#/components/responses/badRequest'
+        '500':
+          $ref: '#/components/responses/error'
+      summary: Returns a detailed list of records, optionally filtered.
+      tags:
+        - detail
+  /v0/detail/{id}:
+    get:
+      operationId: getRecordDetail
+      parameters:
+        - $ref: '#/components/parameters/id-path'
+      responses:
+        '200':
+          $ref: '#/components/responses/getRecords'
+        '400':
+          $ref: '#/components/responses/badRequest'
+        '422':
+          $ref: '#/components/responses/notFound'
+        '500':
+          $ref: '#/components/responses/error'
+      summary: Get a single record.
+      tags:
+        - detail
+  /v0/list:
+    get:
+      operationId: getList
+      parameters:
+        - $ref: '#/components/parameters/_fields'
+        - $ref: '#/components/parameters/_limit'
+        - $ref: '#/components/parameters/_offset'
+        - $ref: '#/components/parameters/_search'
+        - $ref: '#/components/parameters/app'
+        - $ref: '#/components/parameters/aws-account-alias'
+        - $ref: '#/components/parameters/aws-account-id'
+        - $ref: '#/components/parameters/aws-account-name'
+        - $ref: '#/components/parameters/aws-region'
+        - $ref: '#/components/parameters/datacenter'
+        - $ref: '#/components/parameters/description'
+        - $ref: '#/components/parameters/env'
+        - $ref: '#/components/parameters/flavor'
+        - $ref: '#/components/parameters/flavor_id'
+        - $ref: '#/components/parameters/hostname'
+        - $ref: '#/components/parameters/id-query'
+        - $ref: '#/components/parameters/image'
+        - $ref: '#/components/parameters/ip'
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/puppet'
+        - $ref: '#/components/parameters/sin'
+        - $ref: '#/components/parameters/stack'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/tenant'
+        - $ref: '#/components/parameters/tenant_id'
+        - $ref: '#/components/parameters/type'
+      responses:
+        '200':
+          $ref: '#/components/responses/getRecords'
+        '400':
+          $ref: '#/components/responses/badRequest'
+        '500':
+          $ref: '#/components/responses/error'
+      summary: Returns a summarized list of records, optionally filtered.
+      tags:
+        - list
+  /v0/list/{id}:
+    get:
+      operationId: getRecordList
+      parameters:
+        - $ref: '#/components/parameters/id-path'
+      responses:
+        '200':
+          $ref: '#/components/responses/getRecords'
+        '400':
+          $ref: '#/components/responses/badRequest'
+        '422':
+          $ref: '#/components/responses/notFound'
+        '500':
+          $ref: '#/components/responses/error'
+      summary: Get a single record.
+      tags:
+        - list
+  /v0/records:
+    get:
+      description: Getting from this endpoint is functionally identical to /list.
+      operationId: getRecords
+      parameters:
+        - $ref: '#/components/parameters/_limit'
+        - $ref: '#/components/parameters/_offset'
+        - $ref: '#/components/parameters/_search'
+        - $ref: '#/components/parameters/app'
+        - $ref: '#/components/parameters/aws-account-alias'
+        - $ref: '#/components/parameters/aws-account-id'
+        - $ref: '#/components/parameters/aws-account-name'
+        - $ref: '#/components/parameters/aws-region'
+        - $ref: '#/components/parameters/datacenter'
+        - $ref: '#/components/parameters/description'
+        - $ref: '#/components/parameters/env'
+        - $ref: '#/components/parameters/flavor'
+        - $ref: '#/components/parameters/flavor_id'
+        - $ref: '#/components/parameters/hostname'
+        - $ref: '#/components/parameters/id-query'
+        - $ref: '#/components/parameters/image'
+        - $ref: '#/components/parameters/ip'
+        - $ref: '#/components/parameters/owner'
+        - $ref: '#/components/parameters/puppet'
+        - $ref: '#/components/parameters/sin'
+        - $ref: '#/components/parameters/stack'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/tenant'
+        - $ref: '#/components/parameters/tenant_id'
+        - $ref: '#/components/parameters/type'
+      responses:
+        '200':
+          $ref: '#/components/responses/getRecords'
+        '400':
+          $ref: '#/components/responses/badRequest'
+        '500':
+          $ref: '#/components/responses/error'
+      summary: Returns a summarized list of records, optionally filtered.
+      tags:
+        - records
+    post:
+      operationId: postRecords
+      requestBody:
+        $ref: '#/components/requestBodies/postRecords'
+      responses:
+        '200':
+          $ref: '#/components/responses/postRecords'
+        '400':
+          $ref: '#/components/responses/badRequest'
+        '500':
+          $ref: '#/components/responses/error'
+      security:
+        - BasicAuth: []
+      summary: Post an array of records.
+      tags:
+        - records
+  /v0/records/{id}:
+    delete:
+      operationId: deleteRecord
+      parameters:
+        - $ref: '#/components/parameters/id-path'
+      responses:
+        '200':
+          $ref: '#/components/responses/deleteRecord'
+        '400':
+          $ref: '#/components/responses/badRequest'
+        '422':
+          description: The specified record could not be found.
+        '500':
+          $ref: '#/components/responses/error'
+      security:
+        - BasicAuth: []
+      summary: Delete a single record.
+      tags:
+        - records
+    get:
+      operationId: getRecord
+      parameters:
+        - $ref: '#/components/parameters/id-path'
+      responses:
+        '200':
+          $ref: '#/components/responses/getRecords'
+        '400':
+          $ref: '#/components/responses/badRequest'
+        '422':
+          $ref: '#/components/responses/notFound'
+        '500':
+          $ref: '#/components/responses/error'
+      summary: Get a single record.
+      tags:
+        - records
+    put:
+      operationId: putRecord
+      parameters:
+        - $ref: '#/components/parameters/id-path'
+      requestBody:
+        $ref: '#/components/requestBodies/putRecord'
+      responses:
+        '201':
+          $ref: '#/components/responses/putRecord'
+        '500':
+          $ref: '#/components/responses/error'
+      security:
+          - BasicAuth: []
+      summary: Save a single record.
+      tags:
+        - records
+components:
+  parameters:
+    _fields:
+      description: The fields to show.
+      explode: false
+      in: query
+      name: _fields
+      required: false
+      schema:
+        example: ip,hostname
+        type: string
+      style: form
+    _limit:
+      description: Limit the number of records returned.
+      explode: false
+      in: query
+      name: _limit
+      required: false
+      schema:
+        example: 30
+        type: integer
+      style: form
+    _offset:
+      description: Specify the number of records to skip in the results.
+      explode: false
+      in: query
+      name: _offset
+      required: false
+      schema:
+        example: 60
+        type: integer
+      style: form
+    _search:
+      description: Search records for a pattern.
+      explode: false
+      in: query
+      name: _search
+      required: false
+      schema:
+        example: foo
+        type: string
+      style: form
+    app:
+      description: The name of an app.
+      explode: false
+      in: query
+      name: app
+      required: false
+      schema:
+        example: web-opsnode
+        type: string
+      style: form
+    aws-account-id:
+      description: The ID number of an AWS account.
+      explode: false
+      in: query
+      name: aws-account-id
+      required: false
+      schema:
+        example: 123456789012
+        type: integer
+      style: form
+    aws-account-alias:
+      description: The alias of an AWS account.
+      explode: false
+      in: query
+      name: aws-account-alias
+      required: false
+      schema:
+        example: pdxfixit-1
+        type: string
+      style: form
+    aws-account-name:
+      description: The name of an AWS account.
+      explode: false
+      in: query
+      name: aws-account-name
+      required: false
+      schema:
+        example: Account Number One
+        type: string
+      style: form
+    aws-region:
+      description: The AWS region of a resource.
+      explode: false
+      in: query
+      name: aws-region
+      required: false
+      schema:
+        example: us-west-1
+        type: string
+      style: form
+    catalogCount:
+      description: Boolean flag to display quantities.
+      explode: false
+      in: query
+      name: count
+      required: false
+      schema:
+        example: true
+        type: boolean
+      style: form
+    catalogFilter:
+      description: Regex used to filter the category list.
+      explode: true
+      in: query
+      name: filter
+      required: false
+      schema:
+        description: Regex
+        example: /^open/
+        type: string
+      style: form
+    catalogItem:
+      description: Valid query parameter, used to return a catalog of unique values.
+      explode: true
+      in: path
+      name: item
+      required: true
+      schema:
+        description: Catalog Item
+        example: type
+        type: string
+      style: simple
+    datacenter:
+      description: The name of a datacenter.
+      explode: false
+      in: query
+      name: datacenter
+      required: false
+      schema:
+        example: va2
+        type: string
+      style: form
+    description:
+      description: The description from metadata.
+      explode: false
+      in: query
+      name: description
+      required: false
+      schema:
+        example: foo
+        type: string
+      style: form
+    env:
+      description: The env name.
+      explode: false
+      in: query
+      name: env
+      required: false
+      schema:
+        example: ecn67
+        type: string
+      style: form
+    flavor:
+      description: The name of an instance flavor.
+      explode: false
+      in: query
+      name: flavor
+      required: false
+      schema:
+        example: m1-1-6144
+        type: string
+      style: form
+    flavor_id:
+      description: The VIO guid for an instance flavor.
+      explode: false
+      in: query
+      name: flavor_id
+      required: false
+      schema:
+        example: acc0b733-13f1-4c8b-bf1d-515f7987e9ff
+        type: string
+      style: form
+    hostname:
+      description: The hostname.
+      explode: false
+      in: query
+      name: hostname
+      required: false
+      schema:
+        example: foobar.pdxfixit.com
+        type: string
+      style: form
+    id-path:
+      description: The HostDB ID.
+      explode: true
+      in: path
+      name: id
+      required: true
+      schema:
+        description: HostDB ID
+        example: hdb-00ca87d9-8f3f-4fc0-b257-e68414afb34e
+        type: string
+      style: simple
+    id-query:
+      description: The records' UUID from its native environment.
+      explode: false
+      in: query
+      name: id
+      required: false
+      schema:
+        description: ID
+        example: 035a3a54-98a2-4f1a-adca-c9db5ecc39dc
+        type: string
+      style: form
+    image:
+      description: The disk image used to create the Openstack VM.
+      explode: false
+      in: query
+      name: image
+      required: false
+      schema:
+        example: rhel-7-x86_64-mx-base-master-b200-20170917T0953
+        type: string
+      style: form
+    ip:
+      description: The IP address of a host.
+      explode: false
+      in: query
+      name: ip
+      required: false
+      schema:
+        example: 10.12.14.16
+        type: string
+      style: form
+    owner:
+      description: The owner(s) as defined in metadata.
+      explode: false
+      in: query
+      name: owner
+      required: false
+      schema:
+        example: info@pdxfixit.com
+        type: string
+      style: form
+    puppet:
+      description: The defined Puppet role.
+      explode: false
+      in: query
+      name: puppet
+      required: false
+      schema:
+        example: roles::env
+        type: string
+      style: form
+    sin:
+      deprecated: true
+      description: The server identification number.
+      explode: false
+      in: query
+      name: sin
+      required: false
+      schema:
+        example: sin.133
+        type: string
+      style: form
+    stack:
+      description: The name of an Openstack instance.
+      explode: false
+      in: query
+      name: stack
+      required: false
+      schema:
+        example: va2-stack2
+        type: string
+      style: form
+    status:
+      description: The status of the Openstack VM.
+      explode: false
+      in: query
+      name: status
+      required: false
+      schema:
+        example: ACTIVE
+        type: string
+      style: form
+    tenant:
+      description: The name of an Openstack tenant.
+      explode: false
+      in: query
+      name: tenant
+      required: false
+      schema:
+        example: va2_s2_dev1
+        type: string
+      style: form
+    tenant_id:
+      description: The VIO guid for an Openstack tenant.
+      explode: false
+      in: query
+      name: tenant_id
+      required: false
+      schema:
+        example: 05e6f4466f0d45749a762160a5fdfda8
+        type: string
+      style: form
+    type:
+      description: The type of HostDB record to retrieve.
+      explode: false
+      in: query
+      name: type
+      required: false
+      schema:
+        example: openstack
+        type: string
+      style: form
+  requestBodies:
+    postRecords:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/postRecords'
+      description: Post multiple records for saving to HostDB.
+      required: true
+    putRecord:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/record'
+      description: Put a single record into HostDB.
+  responses:
+    apiConfig:
+      content:
+        application/json:
+          schema:
+            properties:
+              context_fields:
+                description: Required context fields for each record type.
+                type: object
+              list_fields:
+                description: Default fields to display for the /list/ endpoint.
+                items:
+                  type: string
+                type: array
+              query_params:
+                description: Supported query parameters with the data location.
+                type: object
+            type: object
+      description: The current API configuration.
+    badRequest:
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                description: What's possibly wrong with the request.
+                type: string
+            type: object
+      description: bad request
+    config:
+      content:
+        application/json:
+          schema:
+            additionalProperties: true
+            type: object
+      description: Return the current app configuration.
+    deleteRecord:
+      content:
+        application/json:
+          schema:
+            description: ID and status of deletion.
+            properties:
+              deleted:
+                description: Was the record deleted?
+                type: boolean
+              id:
+                description: HostDB ID
+                type: string
+            required:
+              - deleted
+              - id
+            type: object
+      description: Delete a single record.
+    error:
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                description: Error message.
+                type: string
+              reason:
+                description: Optional, can provide context or debug hints.
+                type: string
+            required:
+              - error
+            type: object
+        text/html:
+          schema:
+            type: string
+      description: HostDB error
+    getCatalog:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/getCatalog'
+      description: Given a valid item, returns a list of unique values.
+    getCsv:
+      content:
+        text/csv:
+          schema:
+            type: string
+      description: A CSV file of records.
+    getRecords:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/getRecords'
+      description: A JSON object of records, indexed by HostDB ID.
+    health:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/health'
+      description: An availability report for the app and database.
+    notFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/notFound'
+      description: The specified record could not be found.
+    postRecords:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/postRecordsResponse'
+      description: HostDB response to multiple records being posted.
+    putRecord:
+      content:
+        application/json:
+          schema:
+            description: Response when saving a single record using PUT.
+            properties:
+              id:
+                description: HostDB ID
+                type: string
+              ok:
+                description: Was the record saved?
+                type: boolean
+            required:
+              - id
+              - ok
+            type: object
+      description: Record saved.
+    stats:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/stats'
+      description: Statistical information about HostDB.
+    version:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/version'
+      description: Return version information.
+  schemas:
+    getCatalog:
+      description: Standard HostDB response when requesting a catalog
+      properties:
+        count:
+          description: How many records are being returned.
+          type: integer
+        query_time:
+          description: How long the database query took.
+          type: string
+        catalog:
+          description: An array of items (strings).
+          items:
+            type: string
+          type: array
+      required:
+        - count
+        - query_time
+        - catalog
+      type: object
+    getRecords:
+      description: Standard HostDB response when requesting records
+      properties:
+        count:
+          description: How many records are being returned.
+          type: integer
+        query_time:
+          description: How long the database query took.
+          type: string
+        records:
+          description: A JSON object of records, indexed by HostDB ID.
+          type: object
+      required:
+        - count
+        - query_time
+        - records
+      type: object
+    health:
+      description: Describes the status of both the app and database.
+      properties:
+        app:
+          enum:
+            - up
+          example: up
+          type: string
+        db:
+          enum:
+            - missing
+            - present
+          example: present
+          type: string
+        total_records:
+          description: Total number of records in the HostDB system.
+          type: integer
+      required:
+        - app
+        - db
+        - total_records
+      type: object
+    notFound:
+      description: The specified record could not be found.
+      properties:
+        code:
+          description: The HTTP response error code.
+          enum:
+            - 422
+          example: 422
+          type: integer
+        message:
+          description: An attempt to explain why the error was achieved.
+          type: string
+      required:
+        - code
+        - message
+      type: object
+    postRecords:
+      description: POSTing records into HostDB
+      properties:
+        committer:
+          description: The User-Agent of the posting source.
+          example: hostdb-collector-openstack
+          type: string
+        context:
+          description: An object containing type-specific data, which informs where the data is being collected from.
+          type: object
+        records:
+          description: 'An array of data to be saved.'
+          items:
+            $ref: '#/components/schemas/record'
+          type: array
+        timestamp:
+          description: Timestamp of when the data was collected.
+          example: '2018-09-04 23:44:03'
+          type: string
+        type:
+          description: The type of HostDB record.
+          example: openstack
+          type: string
+      required:
+        - context
+        - records
+        - type
+      type: object
+    postRecordsResponse:
+      description: HostDB response to multiple records being posted.
+      properties:
+        ok:
+          description: Were the records successfully processed?
+          example: true
+          type: boolean
+        error:
+          description: Error message, if any.
+          example: 123 record(s) processed
+          type: string
+      required:
+        - ok
+      type: object
+    record:
+      description: HostDB record schema
+      properties:
+        id:
+          description: The HostDB ID.
+          type: string
+        type:
+          description: The type of HostDB record. Cannot contain spaces.
+          type: string
+        hostname:
+          description: Hostname
+          type: string
+        ip:
+          description: IP address
+          type: string
+        timestamp:
+          description: Timestamp of when the data was collected.
+          type: string
+        committer:
+          description: The User-Agent of the posting source.
+          type: string
+        context:
+          description: An object containing type-specific data, which informs where the data is being collected from.
+          type: object
+        data:
+          description: An object containing collected data from the source system.
+          type: object
+        hash:
+          description: A SHA256 hash of the data.
+          type: string
+      required:
+        - id
+        - type
+        - context
+        - data
+      type: object
+    stats:
+      description: HostDB statistical information
+      properties:
+        lastseen_collectors:
+          properties:
+            hostdb-collector-aws:
+              example: 2020-04-28 20:43:37
+              type: string
+            hostdb-collector-oneview:
+              example: 2020-04-01 08:00:19
+              type: string
+            hostdb-collector-ucs:
+              example: 2020-04-01 02:42:14
+              type: string
+            hostdb-collector-vrops:
+              example: 2020-04-21 20:08:48
+              type: string
+          type: object
+        newest_record:
+          example: 2020-05-02 20:09:26
+          type: string
+        oldest_record:
+          example: 2020-03-03 19:15:05
+          type: string
+        total_records:
+          example: 84631
+          type: integer
+      type: object
+    version:
+      description: HostDB version information
+      properties:
+        app:
+          properties:
+            version:
+              example: 0.1.999
+              type: string
+            api_version:
+              example: 0.1.1
+              type: string
+            commit:
+              example: abc1234
+              type: string
+            date:
+              example: 2018-12-07T20:41:06Z
+              type: string
+            build_url:
+              example: https://builds.pdxfixit.com/workflow/b8d145c4-6e30-4307-879c-c5622ddfdf55
+              type: string
+            go_version:
+              example: go1.11.2
+              type: string
+          type: object
+        db:
+          properties:
+            version:
+              example: 10.3.11-MariaDB-1:10.3.11+maria~bionic
+              type: string
+          type: object
+      required:
+        - version
+        - api_version
+        - commit
+        - date
+        - build_url
+        - go_version
+      type: object
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+tags:
+  - name: admin
+  - name: catalog
+  - name: config
+  - name: detail
+  - name: list
+  - name: records

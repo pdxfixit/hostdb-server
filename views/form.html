@@ -1,0 +1,41 @@
+<form name="metadata" action="/" method="get">
+  <div class="container fixed-fluid">
+
+    <div class="row pt8-sm">
+      <div id="repeatable">
+        <div class="row mb6-sm pb5-sm border-bottom input-group input-group-lg entry">
+          <div class="input-group-prepend">
+            <div class="btn-group field-button-group">
+              <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Choose a field...</button>
+              <div class="dropdown-menu">
+                  {{- range $text, $key := availableFields -}}
+                    <a class="dropdown-item" href="#" data-key="{{- $key -}}">{{- $text -}}</a>
+                  {{- end -}}
+              </div>
+            </div>
+          </div>
+          <input type="text" class="form-control" aria-label="Text input" name="_search" placeholder="... or just type what you're looking for">
+          <span class="input-group-btn ml4-sm">
+            <button type="button" class="btn btn-success btn-lg btn-add">
+              <span class="g-plus" aria-hidden="true"></span>
+            </button>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-5 col-sm-offset-0">
+        <button id="imfeelinglucky" type="button" class="btn-primary-dark btn-lg" style="outline: none;">
+          <h3 class="display-3">I'm Feeling Lucky</h3>
+        </button>
+      </div>
+      <div class="col-sm-5 col-sm-offset-2">
+        <button id="submit" type="submit" class="btn-primary-dark btn-lg" style="outline: none;">
+          <h3 class="display-3">Search</h3>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</form>
